@@ -30,21 +30,21 @@ router.post(
     check('name', 'Name is required')
       .not()
       .isEmpty(),
-    // check('dob', 'Date of Birth is required')
-    //   .not()
-    //   .isEmpty(),
-    // check('address', 'Address is required')
-    //   .not()
-    //   .isEmpty(),
-    // check('city', 'City is required')
-    //   .not()
-    //   .isEmpty(),
-    // check('state', 'State is required')
-    //   .not()
-    //   .isEmpty(),
-    // check('mobile', 'Mobile Number is required')
-    //   .not()
-    //   .isEmpty(),
+    check('dob', 'Date of Birth is required')
+      .not()
+      .isEmpty(),
+    check('address', 'Address is required')
+      .not()
+      .isEmpty(),
+    check('city', 'City is required')
+      .not()
+      .isEmpty(),
+    check('state', 'State is required')
+      .not()
+      .isEmpty(),
+    check('mobile', 'Mobile Number is required')
+      .not()
+      .isEmpty(),
     check('email', 'Please include a valid email').isEmail()
   ],
   async (req, res) => {
@@ -74,27 +74,8 @@ router.post(
         email
       });
 
-      // const salt = await bcrypt.genSalt(10);
-
-      // user.password = await bcrypt.hash(password, salt);
-
       await user.save();
       res.json("Record inserted sucessfully");
-      // const payload = {
-      //   user: {
-      //     id: user.id
-      //   }
-      // };
-
-      // jwt.sign(
-      //   payload,
-      //   config.get('jwtSecret'),
-      //   { expiresIn: 360000 },
-      //   (err, token) => {
-      //     if (err) throw err;
-      //     res.json({ token });
-      //   }
-      // );
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
@@ -127,10 +108,31 @@ router.delete('/:id', async (req, res) => {
 });
 
 
-// @route    PUT api/users/experience
+// @route    PUT api/users/id
 // @desc     Add users experience
 // @access   Private
-router.put('/:id',async (req, res) => {
+router.put('/:id',
+[
+  check('name', 'Name is required')
+    .not()
+    .isEmpty(),
+  check('dob', 'Date of Birth is required')
+    .not()
+    .isEmpty(),
+  check('address', 'Address is required')
+    .not()
+    .isEmpty(),
+  check('city', 'City is required')
+    .not()
+    .isEmpty(),
+  check('state', 'State is required')
+    .not()
+    .isEmpty(),
+  check('mobile', 'Mobile Number is required')
+    .not()
+    .isEmpty(),
+  check('email', 'Please include a valid email').isEmail()
+],async (req, res) => {
   console.log(req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
