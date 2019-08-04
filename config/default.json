@@ -1,0 +1,6 @@
+{
+  "mongoURI": "mongodb://psngsra:sopa1234@ds157857.mlab.com:57857/dev-social",
+  "jwtSecret": "secret",
+  "githubClientId": "",
+  "githubSecret": ""
+}
