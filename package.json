@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon server",
     "server": "nodemon server",
-    "dev": "concurrently \"npm run server\""
+    "client": "npm start"
   },
   "author": "Brad Traversy",
   "license": "MIT",
