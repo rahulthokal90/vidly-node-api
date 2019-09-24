@@ -3,6 +3,7 @@ const connectDB = require('./config/db');
 const path = require('path');
 const cors = require('cors');
 
+
 const app = express();
 console.log('Hello');
 
@@ -19,8 +20,10 @@ app.use(function(req, res, next) {
   next();
 });
 app.use('/api/users', require('./routes/api/users'));
+app.use('/api/modules', require('./routes/api/table'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/posts', require('./routes/api/posts'));
+
 
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
