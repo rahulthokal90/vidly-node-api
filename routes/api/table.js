@@ -28,28 +28,28 @@ const table_dtl = [
 // @access   Public 
 router.get('/', async (req, res) => {
   try {
-    // const tableDetails = await Table.find();
-    // res.json(tableDetails);
+    const tableDetails = await Table.find();
+    res.json(tableDetails);
     //res.json(table_dtl);
-   await table_dtl.map(tbl => {
-      db.one('SELECT count(*) FROM webonline.'+tbl.dt_name)
-      .then( async function (data) {
-        console.log(parseInt(data.count));
-        const tableDetails = await Table.update({ module_name : tbl.t_name},{
+  //  await table_dtl.map(tbl => {
+  //     db.one('SELECT count(*) FROM webonline.'+tbl.dt_name)
+  //     .then( async function (data) {
+  //       console.log(parseInt(data.count));
+  //       const tableDetails = await Table.update({ module_name : tbl.t_name},{
 
-          $set : {
-            upload_count : parseInt(data.count)
-          }
-        });
-        res.json(tableDetails);
-        //tbl_details.upload_count = data;
-      })
-      .catch(function (error) {
-        console.log('ERROR:', error)
-      })
+  //         $set : {
+  //           upload_count : parseInt(data.count)
+  //         }
+  //       });
+  //       res.json(tableDetails);
+  //       //tbl_details.upload_count = data;
+  //     })
+  //     .catch(function (error) {
+  //       console.log('ERROR:', error)
+  //     })
 
      
-    });
+  //   });
     // const tableDetails = await Table.find();
     // res.json(tableDetails);
     
