@@ -25,7 +25,21 @@ const connectionString = 'postgres://webonline_user:webonline_esds@10.10.233.68:
 // @route    GET api/auth
 // @desc     Test route
 // @access   Public 
-router.get('/',  (req, res) => {
+router.get('/', async (req, res) => {
+  try {
+     const tableDetails = await Exam.find();
+     res.json(tableDetails);
+      res.json(table_dtl);
+    
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+// @route    GET api/auth
+// @desc     Test route
+// @access   Public 
+router.get('/exam',  (req, res) => {
   try {
     // const errors = validationResult(req);
     // if (!errors.isEmpty()) {
