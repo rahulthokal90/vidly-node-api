@@ -28,9 +28,9 @@ const table_dtl = [
 // @access   Public 
 router.get('/', async (req, res) => {
   try {
-    const tableDetails = await Table.find();
-    res.json(tableDetails);
-    //res.json(table_dtl);
+     const tableDetails = await Table.find();
+     res.json(tableDetails);
+      res.json(table_dtl);
   //  await table_dtl.map(tbl => {
   //     db.one('SELECT count(*) FROM webonline.'+tbl.dt_name)
   //     .then( async function (data) {
@@ -50,6 +50,40 @@ router.get('/', async (req, res) => {
 
      
   //   });
+    // const tableDetails = await Table.find();
+    // res.json(tableDetails);
+    
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+
+router.put('/', async (req, res) => {
+  try {
+   await table_dtl.map(tbl => {
+      db.one('SELECT count(*) FROM webonline.'+tbl.dt_name)
+      .then( async function (data) {
+        console.log(parseInt(data.count));
+        const tableDetails = await Table.update({ module_name : tbl.t_name},{
+
+          $set : {
+            "genre": {
+              _id: "5d47ce8cd36d2b2ce0d8ec69",
+              name: "Registration Cron"
+            }
+          }
+        });
+        res.json(tableDetails);
+        //tbl_details.upload_count = data;
+      })
+      .catch(function (error) {
+        console.log('ERROR:', error)
+      })
+
+     
+    });
     // const tableDetails = await Table.find();
     // res.json(tableDetails);
     
@@ -110,85 +144,6 @@ router.post(
     }
   }
 );
-// @route    DELETE api/users/:id
-// @desc     Delete a user
-// @access   Private
-// router.delete('/:id', async (req, res) => {
-//   console.log("delete" +req.params.id);
-//   try {
-//     const user = await User.findById(req.params.id);
 
-//     if (!user) {
-//       return res.status(404).json({ msg: 'User not found' });
-//     }
-
-
-//     await user.remove();
-
-//     res.json({ msg: 'User removed' });
-//   } catch (err) {
-//     console.error(err.message);
-//     if (err.kind === 'ObjectId') {
-//       return res.status(404).json({ msg: 'User not found' });
-//     }
-//     res.status(500).send('Server Error');
-//   }
-// });
-
-
-// @route    PUT api/users/id
-// @desc     Add users experience
-// @access   Private
-// router.put('/:id',
-// [
-//   check('name', 'Name is required')
-//     .not()
-//     .isEmpty(),
-//   check('dob', 'Date of Birth is required')
-//     .not()
-//     .isEmpty(),
-//   check('address', 'Address is required')
-//     .not()
-//     .isEmpty(),
-//   check('city', 'City is required')
-//     .not()
-//     .isEmpty(),
-//   check('state', 'State is required')
-//     .not()
-//     .isEmpty(),
-//   check('mobile', 'Mobile Number is required')
-//     .not()
-//     .isEmpty(),
-//   check('email', 'Please include a valid email').isEmail()
-// ],async (req, res) => {
-//   console.log(req.body);
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       return res.status(400).json({ errors: errors.array() });
-//     }
-//     try {
-//         const user = await User.findByIdAndUpdate(
-//           req.params.id,
-//           {
-//             name: req.body.name,
-//             dob: req.body.dob,
-//             city: req.body.city,
-//             state: req.body.state,
-//             email: req.body.email,
-//             mobile: req.body.mobile,
-//             address: req.body.address
-//           },
-//           { new: true }
-//         );
-//       if (!user)
-//       return res.status(404).send("The user with the given ID was not found.");
-    
-//         res.send(user);
-//     } catch (err) {
-//       console.error(err.message);
-//       res.status(500).send('Server Error');
-//     }
-//   }
-// );
 
 module.exports = router;
