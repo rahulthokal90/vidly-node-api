@@ -33,6 +33,12 @@ const ExamSchema = mongoose.model('Exams', new mongoose.Schema({
     type: Number, 
     maxlength: 20
   },
+  from_date: {
+    type: String
+  },
+  to_date: {
+    type: String
+  },
   date: {
     type: Date,
     default: Date.now

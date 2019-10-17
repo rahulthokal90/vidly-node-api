@@ -17,15 +17,17 @@ const connectionString = 'postgres://webonline_user:webonline_esds@10.10.233.68:
 
 //   ];
 
-//   const t1 = ['20','21','42','59','74','81','101','101','164','175','177','34','526','527','58','990','991','992','160'];
+   const t1 = ['20','21','42','59','60','62','63','64','65','66','67','68','69','70','71','72','74','81','101','164','175','177','200','340','580','526'];
 
-//   const t2 = ['907','219','219','907','907','907','570','569','907','907','907','907','999','999','907','903','998','219','907'];
-
+  const t2 = ['907','219','571','908','999'];
+  const pool = new Pool({
+    connectionString: connectionString,
+  });
 
 // @route    GET api/auth
 // @desc     Test route
 // @access   Public 
-router.get('/', async (req, res) => {
+router.get('/exam', async (req, res) => {
   try {
      const tableDetails = await Exam.find();
      res.json(tableDetails);
@@ -39,16 +41,15 @@ router.get('/', async (req, res) => {
 // @route    GET api/auth
 // @desc     Test route
 // @access   Public 
-router.get('/exam',  (req, res) => {
+router.post('/',  (req, res) => {
   try {
     // const errors = validationResult(req);
     // if (!errors.isEmpty()) {
     //   return res.status(400).json({ errors: errors.array() });
     // }
-    const pool = new Pool({
-      connectionString: connectionString,
-    });
-     pool.query("SELECT exm_cd,exm_prd,count(*) FROM webonline.et_ol_exm_app_upload where exm_cd IN ('20','21','42','59','74','81','101','101','164','175','177','34','526','527','58','990','991','992','160') and exm_prd IN ('907','219','219','907','907','907','570','569','907','907','907','907','999','999','907','903','998','219','907') and DATE(trn_date) between '2019-10-01' and '2019-10-06' group by exm_cd,exm_prd", (err, ress) => {
+    let str = `SELECT exm_cd,exm_prd,count(*) FROM webonline.et_ol_exm_app_upload where exm_cd IN (${t1}) and exm_prd IN (${t2}) and DATE(trn_date) between '2019-10-01' and '2019-10-06' group by exm_cd,exm_prd`;
+   
+     pool.query(str, (err, ress) => {
       //ress.rows.find().map( function(u) { return u.exm_cd; } );
       ress.rows.forEach(function (row) {
         console.log(row);
@@ -60,13 +61,15 @@ router.get('/exam',  (req, res) => {
               'exm_app_upd': row.count,
               'exm_app_hist' : 0,
               'exm_invc_upd' : 0,
-              'exm_invc_hist' : 0, 
+              'exm_invc_hist' : 0,
+              'from_date' : '2019-10-01',
+              'to_date' : '2019-10-06', 
             }).save();
       });
-     // res.json("Record inserted sucessfully");
-      //pool.end();
+      res.json("Record inserted sucessfully");
+      
     });
-    
+    pool.end();
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -74,38 +77,120 @@ router.get('/exam',  (req, res) => {
 });
 
 
-// router.put('/', async (req, res) => {
-//   try {
-//    await table_dtl.map(tbl => {
-//       db.one('SELECT count(*) FROM webonline.'+tbl.dt_name)
-//       .then( async function (data) {
-//         console.log(parseInt(data.count));
-//         const tableDetails = await Table.update({ module_name : tbl.t_name},{
-
-//           $set : {
-//             "genre": {
-//               _id: "5d47ce8cd36d2b2ce0d8ec69",
-//               name: "Registration Cron"
-//             }
-//           }
-//         });
-//         res.json(tableDetails);
-//         //tbl_details.upload_count = data;
-//       })
-//       .catch(function (error) {
-//         console.log('ERROR:', error)
-//       })
-
-     
-//     });
-//     // const tableDetails = await Table.find();
-//     // res.json(tableDetails);
+router.put('/update', async (req, res) => {
+  try {
     
-//   } catch (err) {
-//     console.error(err.message);
-//     res.status(500).send('Server Error');
-//   }
-// });
+    const tableDetails = await Exam.find().select('exm_cd exm_prd');
+    //console.log(tableDetails);
+    const arrExam = [
+     // {tbl_name : 'et_ol_exm_app_upload_hist', date_type :'trn_date'},
+      // {tbl_name : 'et_ol_exm_invoice_upload', date_type :'date_of_invoice'},
+       {tbl_name : req.body.tblName, date_type :req.body.dateType}
+    ];
+    // const arrData = [];
+    // arrExam.map(exm => {
+    //   tableDetails.map(tt1 => {
+    //    arrData.push(`SELECT exm_cd,exm_prd,count(*) FROM webonline.${exm.tbl_name} where exm_cd = '${tt1.exm_cd}' and exm_prd = '${tt1.exm_prd}' and DATE(${exm.date_type}) between '2019-10-01' and '2019-10-06' group by exm_cd,exm_prd`);
+    //   });
+    // });
+    // arrData.forEach(myFunction);
+    // function myFunction(item, index) {
+    //   console.log(item);
+    //    pool.query(item, (err1, res_sub) => {
+    //     console.log(res_sub.rows);
+    //     console.log(index);
+    //         if(res_sub.rows){
+    //         res_sub.rows.forEach(async function (row1) {
+    //           console.log(row1.count);
+    //           console.log(exm.tbl_name);
+    //             Exam.findByIdAndUpdate(
+    //             tt1._id,
+    //             {
+    //               exm_app_hist: (row1.count)? row1.count :0
+    //             },
+    //             { new: true }
+    //           );
+    //       });
+    //     }
+    //   });
+    //   //pool.end();
+    //  // console.log(item + '--' + index)
+    // }
+    // arrData.map(function(exm) {
+    //   console.log(exm);
+    //    pool.query(exm, (err1, res_sub) => {
+    //     console.log(res_sub.rows);
+    //   });
+    // });
+    //console.log(arrData);
+    arrExam.map(exm => {
+      tableDetails.map(tt1 => {
+          let str1 = `SELECT count(*) FROM webonline.${exm.tbl_name} where exm_cd = '${tt1.exm_cd}' and exm_prd = '${tt1.exm_prd}' and DATE(${exm.date_type}) between '${req.body.fromDate}' and '${req.body.toDate}' group by exm_cd,exm_prd`;
+          //console.log(tt1);
+          pool.query(str1, (err1, res_sub) => {
+            //if(err1) return "data already present";
+          
+           //res.send(res_sub);
+           if(res_sub.rows){  
+            
+                res_sub.rows.forEach( async function (row1) {
+                  
+                  if(exm.tbl_name == 'et_ol_exm_invoice_upload_hist'){
+                    console.log(row1)
+                    await Exam.updateMany({ _id : tt1._id},{
+                      $set : {
+                          "exm_invc_hist": row1.count,
+                          "from_date": req.body.fromDate,
+                          "to_date": req.body.toDate
+                      }
+                    });
+                  }else if(exm.tbl_name == 'et_ol_exm_invoice_upload'){
+                    await Exam.updateMany({ _id : tt1._id},{
+                      $set : {
+                          "exm_invc_upd": row1.count,
+                          "from_date": req.body.fromDate,
+                          "to_date": req.body.toDate
+                      }
+                    });
+                  }else{
+                    await Exam.updateMany({ _id : tt1._id},{
+                      $set : {
+                          "exm_app_hist": row1.count,
+                          "from_date": req.body.fromDate,
+                          "to_date": req.body.toDate
+                      }
+                    });
+                  }
+              });
+           }
+        });
+      });
+      pool.end();
+    });
+    
+
+    //ress.rows.forEach(function (row) {
+      // const str1 = `SELECT exm_cd,exm_prd,count(*) FROM webonline.et_ol_exm_app_upload_hist where exm_cd = '${row.exm_cd}' and exm_prd = '${row.exm_prd}' and DATE(trn_date) between '2019-10-01' and '2019-10-06' group by exm_cd,exm_prd`;
+      // pool.query(str, (err1, res_sub) => {
+      //   res_sub.rows.forEach(function (row1) {
+      //     new Exam({
+      //       'exm_cd' : row.exm_cd,
+      //       'exm_prd' : row.exm_prd,
+      //       'total_exam_reg' : 0,
+      //       'total_invc' : 0,
+      //       'exm_app_upd': row.count,
+      //       'exm_app_hist' : row1.count,
+      //       'exm_invc_upd' : 0,
+      //       'exm_invc_hist' : 0, 
+      //     }).save();
+      //   });
+      // });
+    
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 // // @route    POST api/users
 // // @desc     Register user
