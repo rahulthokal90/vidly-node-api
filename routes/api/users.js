@@ -1,87 +1,41 @@
-const express = require('express');
+
+const auth = require("../../middleware/auth");
+const bcrypt = require("bcrypt");
+const _ = require("lodash");
+const { User, validate } = require("../../models/user");
+const express = require("express");
 const router = express.Router();
-const gravatar = require('gravatar');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const config = require('config');
-const { check, validationResult } = require('express-validator/check');
-const User = require('../../models/User');
 
 
 // @route    GET api/auth
 // @desc     Test route
 // @access   Public 
-router.get('/', async (req, res) => {
-  try {
-    const user = await User.find();
-    res.json(user);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  }
+router.get("/me", auth, async (req, res) => {
+  const user = await User.findById(req.user._id).select("-password");
+  res.send(user);
 });
 
 // @route    POST api/users
 // @desc     Register user
 // @access   Public
-router.post(
-  '/',
-  [
-    check('name', 'Name is required')
-      .not()
-      .isEmpty(),
-    check('dob', 'Date of Birth is required')
-      .not()
-      .isEmpty(),
-    check('address', 'Address is required')
-      .not()
-      .isEmpty(),
-    check('city', 'City is required')
-      .not()
-      .isEmpty(),
-    check('state', 'State is required')
-      .not()
-      .isEmpty(),
-    check('mobile', 'Mobile Number is required')
-      .not()
-      .isEmpty(),
-    check('email', 'Please include a valid email').isEmail()
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+router.post("/", async (req, res) => {
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
-    const { name, email, address, dob, city, state, mobile } = req.body;
+  let user = await User.findOne({ email: req.body.email });
+  if (user) return res.status(400).send("User already registered.");
 
-    try {
-      let user = await User.findOne({ email });
+  user = new User(_.pick(req.body, ["name", "email", "password"]));
+  const salt = await bcrypt.genSalt(10);
+  user.password = await bcrypt.hash(user.password, salt);
+  await user.save();
 
-      if (user) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: 'User already exists' }] });
-      }
+  const token = user.generateAuthToken();
+  res
+    .header("x-auth-token", token)
+    .send(_.pick(user, ["_id", "name", "email"]));
+});
 
-      user = new User({
-        name,
-        dob,
-        address,
-        city,
-        state,
-        mobile,
-        email
-      });
-
-      await user.save();
-      res.json("Record inserted sucessfully");
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server error');
-    }
-  }
-);
 // @route    DELETE api/users/:id
 // @desc     Delete a user
 // @access   Private
