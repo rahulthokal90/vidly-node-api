@@ -22,7 +22,7 @@ const table_dtl = [
   {id : 10, t_name : 'bnkqst', dt_name : 'mt_ol_bank_quest_upload'},
   ];
 
-  router.delete("/delete/:id", async (req, res) => {
+  router.delete("/:id", async (req, res) => {
      const module = await Table.findByIdAndRemove(req.params.id);
 
       if (!module)
