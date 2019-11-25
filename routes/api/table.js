@@ -145,5 +145,14 @@ router.post(
   }
 );
 
+router.delete("/:id", [auth, admin], async (req, res) => {
+  const module = await table_dtl.findByIdAndRemove(req.params.id);
+
+  if (!module)
+    return res.status(404).send("The module with the given ID was not found.");
+
+  res.send(module);
+});
+
 
 module.exports = router;
