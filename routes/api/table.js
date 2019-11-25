@@ -23,9 +23,12 @@ const table_dtl = [
   ];
 
   router.delete("/delete/:id",  (req, res) => {
-   // console.log(req.params.id);
-   // const tableDetails = await Table.find();
-     res.json(req.params.id);
+     const module = await Table.findByIdAndRemove(req.params.id);
+
+      if (!module)
+        return res.status(404).send("The module with the given ID was not found.");
+
+      res.send(module);
   });
 
 // @route    GET api/auth
