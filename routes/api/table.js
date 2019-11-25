@@ -22,10 +22,10 @@ const table_dtl = [
   {id : 10, t_name : 'bnkqst', dt_name : 'mt_ol_bank_quest_upload'},
   ];
 
-  router.get("/delete",  async (req, res) => {
-    //console.log(req.params.id);
-    const tableDetails = await Table.find();
-     res.json(tableDetails);
+  router.delete("/delete/:id",  (req, res) => {
+   // console.log(req.params.id);
+   // const tableDetails = await Table.find();
+     res.json(req.params.id);
   });
 
 // @route    GET api/auth
@@ -150,15 +150,15 @@ router.post(
   }
 );
 
-router.get("delete/:id",  async (req, res) => {
-  //console.log(req.params.id);
-  const module = await Table.findByIdAndRemove(req.params.id);
+// router.get("delete/:id",  async (req, res) => {
+//   //console.log(req.params.id);
+//   const module = await Table.findByIdAndRemove(req.params.id);
 
-  if (!module)
-    return res.status(404).send("The module with the given ID was not found.");
+//   if (!module)
+//     return res.status(404).send("The module with the given ID was not found.");
 
-  res.send(module);
-});
+//   res.send(module);
+// });
 
 
 module.exports = router;
