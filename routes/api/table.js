@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
   try {
      const tableDetails = await Table.find();
      res.json(tableDetails);
-      res.json(table_dtl);
+     // res.json(table_dtl);
   //  await table_dtl.map(tbl => {
   //     db.one('SELECT count(*) FROM webonline.'+tbl.dt_name)
   //     .then( async function (data) {
@@ -147,7 +147,7 @@ router.post(
 
 router.delete("delete/:id",  async (req, res) => {
   //console.log(req.params.id);
-  const module = await table_dtl.findByIdAndRemove(req.params.id);
+  const module = await Table.findByIdAndRemove(req.params.id);
 
   if (!module)
     return res.status(404).send("The module with the given ID was not found.");
