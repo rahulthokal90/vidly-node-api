@@ -145,7 +145,7 @@ router.post(
   }
 );
 
-router.delete("delete/:id",  async (req, res) => {
+router.get("delete/:id",  async (req, res) => {
   //console.log(req.params.id);
   const module = await Table.findByIdAndRemove(req.params.id);
 
