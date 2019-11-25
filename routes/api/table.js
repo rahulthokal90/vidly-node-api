@@ -145,7 +145,7 @@ router.post(
   }
 );
 
-router.delete("/:id", [auth, admin], async (req, res) => {
+router.delete("/:id",  async (req, res) => {
   const module = await table_dtl.findByIdAndRemove(req.params.id);
 
   if (!module)
