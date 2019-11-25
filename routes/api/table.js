@@ -22,7 +22,7 @@ const table_dtl = [
   {id : 10, t_name : 'bnkqst', dt_name : 'mt_ol_bank_quest_upload'},
   ];
 
-  router.get("delete/",  async (req, res) => {
+  router.get("/delete",  async (req, res) => {
     //console.log(req.params.id);
     const tableDetails = await Table.find();
      res.json(tableDetails);
