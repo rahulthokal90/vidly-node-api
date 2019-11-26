@@ -110,9 +110,6 @@ router.post(
     check('module_name', 'Module Name is required')
       .not()
       .isEmpty(),
-    check('module_desc', 'Module Description is required')
-      .not()
-      .isEmpty(),
     check('upload_count', 'Upload Count is required')
       .not()
       .isEmpty(),
@@ -126,7 +123,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { module_name, module_desc, upload_count, hist_count } = req.body;
+    const { module_name, upload_count, hist_count } = req.body;
 
     try {
       // let tbl_info = await User.find();
@@ -139,7 +136,6 @@ router.post(
 
       tbl = new Table({
         module_name,
-        module_desc,
         upload_count,
         hist_count
       });
