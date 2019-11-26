@@ -33,7 +33,7 @@ const table_dtl = [
 
 
   router.get("/:id",  async (req, res) => {
-    const module = await Module.findById(req.params.id).select("-__v");
+    const module = await Table.findById(req.params.id).select("-__v");
   
     if (!module)
       return res.status(404).send("The module with the given ID was not found.");
