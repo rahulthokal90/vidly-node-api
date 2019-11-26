@@ -67,6 +67,15 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get("/:id",  async (req, res) => {
+  const module = await Movie.findById(req.params.id).select("-__v");
+
+  if (!module)
+    return res.status(404).send("The module with the given ID was not found.");
+
+  res.send(module);
+});
+
 
 router.put('/', async (req, res) => {
   try {
