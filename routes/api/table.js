@@ -31,6 +31,16 @@ const table_dtl = [
       res.send(module);
   });
 
+
+  router.get("/:id",  async (req, res) => {
+    const module = await Module.findById(req.params.id).select("-__v");
+  
+    if (!module)
+      return res.status(404).send("The module with the given ID was not found.");
+  
+    res.send(module);
+  });
+
 // @route    GET api/auth
 // @desc     Test route
 // @access   Public 
@@ -67,14 +77,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.get("/:id",  async (req, res) => {
-  const module = await Module.findById(req.params.id).select("-__v");
 
-  if (!module)
-    return res.status(404).send("The module with the given ID was not found.");
-
-  res.send(module);
-});
 
 
 router.put('/', async (req, res) => {
