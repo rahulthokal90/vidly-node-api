@@ -78,40 +78,59 @@ router.get('/', async (req, res) => {
 });
 
 
+router.put("/:id", async (req, res) => {
+  const { error } = validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const module = await Table.findByIdAndUpdate(
+    req.params.id,
+    {
+      module_name: req.body.module_name,
+      upload_count: req.body.upload_count,
+      hist_count: req.body.hist_count
+    },
+    { new: true }
+  );
+
+  if (!module)
+    return res.status(404).send("The module with the given ID was not found.");
+
+  res.send(module);
+});
 
 
-router.put('/', async (req, res) => {
-  try {
-   await table_dtl.map(tbl => {
-      db.one('SELECT count(*) FROM webonline.'+tbl.dt_name)
-      .then( async function (data) {
-        console.log(parseInt(data.count));
-        const tableDetails = await Table.update({ module_name : tbl.t_name},{
+// router.put('/', async (req, res) => {
+//   try {
+//    await table_dtl.map(tbl => {
+//       db.one('SELECT count(*) FROM webonline.'+tbl.dt_name)
+//       .then( async function (data) {
+//         console.log(parseInt(data.count));
+//         const tableDetails = await Table.update({ module_name : tbl.t_name},{
 
-          $set : {
-            "genre": {
-              _id: "5d47ce8cd36d2b2ce0d8ec69",
-              name: "Registration Cron"
-            }
-          }
-        });
-        res.json(tableDetails);
-        //tbl_details.upload_count = data;
-      })
-      .catch(function (error) {
-        console.log('ERROR:', error)
-      })
+//           $set : {
+//             "genre": {
+//               _id: "5d47ce8cd36d2b2ce0d8ec69",
+//               name: "Registration Cron"
+//             }
+//           }
+//         });
+//         res.json(tableDetails);
+//         //tbl_details.upload_count = data;
+//       })
+//       .catch(function (error) {
+//         console.log('ERROR:', error)
+//       })
 
      
-    });
-    // const tableDetails = await Table.find();
-    // res.json(tableDetails);
+//     });
+//     // const tableDetails = await Table.find();
+//     // res.json(tableDetails);
     
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  }
-});
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).send('Server Error');
+//   }
+// });
 
 // @route    POST api/users
 // @desc     Register user
