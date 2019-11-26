@@ -79,8 +79,8 @@ router.get('/', async (req, res) => {
 
 
 router.put("/:id", async (req, res) => {
-  const { error } = validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  // const { error } = validate(req.body);
+  // if (error) return res.status(400).send(error.details[0].message);
 
   const module = await Table.findByIdAndUpdate(
     req.params.id,
@@ -88,8 +88,7 @@ router.put("/:id", async (req, res) => {
       module_name: req.body.module_name,
       upload_count: req.body.upload_count,
       hist_count: req.body.hist_count
-    },
-    { new: true }
+    }
   );
 
   if (!module)
